@@ -2,9 +2,12 @@
 
 package com.codepath.flickster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.codepath.flickster.adapters.MovieArrayAdapter;
@@ -29,10 +32,11 @@ public class MovieActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+        int orientation = getResources().getConfiguration().orientation;
 
         lvItems = (ListView) findViewById(R.id.lvMovies);
         movies = new ArrayList<>(); // initialize movies
-        movieAdapter = new MovieArrayAdapter(this, movies); // instantiate movie adapter with list of movies
+        movieAdapter = new MovieArrayAdapter(this, movies, orientation); // instantiate movie adapter with list of movies
         lvItems.setAdapter(movieAdapter); // set list view Adapter with movie Adapater
         String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
 
@@ -58,5 +62,26 @@ public class MovieActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
+    }
+
+    private void onItemClick() {
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Movie movieSelected = movies.get(i); // get movie selected from array
+                launchDetailView(movieSelected);
+            }
+        });
+    }
+
+    private final int REQUEST_CODE = 20;
+    protected void launchDetailView(Movie movie) {
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(MovieActivity.this, MovieDetails.class);
+        i.putExtra("rating", movie.getMovieRating());
+        i.putExtra("originalTitle", movie.getOriginalTitle());
+        i.putExtra("overview", movie.getOverview());
+        i.putExtra("posterPath", movie.getPosterPath());
+        startActivityForResult(i, REQUEST_CODE);
     }
 }
