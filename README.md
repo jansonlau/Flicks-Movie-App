@@ -8,7 +8,7 @@ Time spent: **10** hours spent in total
 
 The following **required** functionality is completed:
 
-* [X] User can **scroll through current movies** from the Movie Database API
+* [X] User can **scroll through current movies** from the [Movie Database API] (http://docs.themoviedb.apiary.io)
 
 The following **optional** features are implemented:
 
