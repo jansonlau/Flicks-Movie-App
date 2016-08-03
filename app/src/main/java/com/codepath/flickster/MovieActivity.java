@@ -21,20 +21,22 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class MovieActivity extends AppCompatActivity {
     ArrayList<Movie> movies;
     MovieArrayAdapter movieAdapter; // declare movie array adapter
-    ListView lvItems;
+    @BindView(R.id.lvMovies) ListView lvItems; // Eliminate findViewById calls by using @BindView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
         int orientation = getResources().getConfiguration().orientation;
+        ButterKnife.bind(this);
 
-        lvItems = (ListView) findViewById(R.id.lvMovies);
         movies = new ArrayList<>(); // initialize movies
         movieAdapter = new MovieArrayAdapter(this, movies, orientation); // instantiate movie adapter with list of movies
         lvItems.setAdapter(movieAdapter); // set list view Adapter with movie Adapater
@@ -62,9 +64,8 @@ public class MovieActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
-    }
 
-    private void onItemClick() {
+        // Add a click listener to look for clicks to launch detail view
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -74,14 +75,18 @@ public class MovieActivity extends AppCompatActivity {
         });
     }
 
-    private final int REQUEST_CODE = 20;
     protected void launchDetailView(Movie movie) {
         // first parameter is the context, second is the class of the activity to launch
         Intent i = new Intent(MovieActivity.this, MovieDetails.class);
+
+        // PASS IN PARAMETERS
         i.putExtra("rating", movie.getMovieRating());
         i.putExtra("originalTitle", movie.getOriginalTitle());
         i.putExtra("overview", movie.getOverview());
         i.putExtra("posterPath", movie.getPosterPath());
-        startActivityForResult(i, REQUEST_CODE);
+        i.putExtra("releaseDate", movie.getReleaseDate());
+
+        // START NEW WINDOW
+        startActivity(i);
     }
 }
