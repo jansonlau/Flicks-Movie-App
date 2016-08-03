@@ -1,6 +1,6 @@
 # Flicks-Movie-App
 
-**Flickster** shows the latest movies currently playing in theaters. The app utilizes the Movie Database API to display images and basic information about these movies to the user.
+**Flickster** shows the latest movies currently playing in theaters. The app utilizes the [Movie Database API] (http://docs.themoviedb.apiary.io) to display images and basic information about these movies to the user.
 
 Time spent: **10** hours spent in total
 
